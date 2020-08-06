@@ -10,9 +10,9 @@ body,html {
   font-family: sans-serif;
 }
 
-.keys,.keys2 {
+.keys {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex: 1;
   min-height: 100vh;
   margin-bottom: 75px;
