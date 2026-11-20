@@ -1,0 +1,251 @@
+:root {
+  --bg: #f6f2ec;
+  --ink: #17120e;
+  --muted: #6f655b;
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-edge: rgba(255, 255, 255, 0.85);
+  --shadow: 0 30px 80px -30px rgba(60, 30, 10, 0.35);
+  --accent: #9a3b22;
+  --accent-2: #c9733f;
+  --blob-1: #f2b48a;
+  --blob-2: #e7a1a8;
+  --blob-3: #c9b6e8;
+  --button-ink: #fffaf5;
+  --serif: ui-serif, "New York", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0c0a;
+    --ink: #f4eee7;
+    --muted: #a79c90;
+    --glass: rgba(30, 24, 20, 0.55);
+    --glass-edge: rgba(255, 255, 255, 0.08);
+    --shadow: 0 30px 90px -30px rgba(0, 0, 0, 0.8);
+    --accent: #f0a37c;
+    --accent-2: #e8795a;
+    --blob-1: #7a3218;
+    --blob-2: #6b2440;
+    --blob-3: #33285e;
+    --button-ink: #1a110c;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Explicit layers: colour field (0), grain (1), content (2). */
+.top, main, .bottom { position: relative; z-index: 2; }
+
+/* Soft drifting colour fields behind everything. */
+.aura {
+  position: fixed;
+  inset: -20vmax;
+  z-index: 0;
+  filter: blur(70px) saturate(1.1);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.aura span {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  animation: drift 26s ease-in-out infinite alternate;
+}
+
+.aura span:nth-child(1) { background: var(--blob-1); top: 5%; left: 0%; }
+.aura span:nth-child(2) { background: var(--blob-2); top: 30%; right: 0%; animation-duration: 32s; animation-delay: -8s; }
+.aura span:nth-child(3) { background: var(--blob-3); bottom: 0%; left: 25%; animation-duration: 38s; animation-delay: -16s; }
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(6vmax, -4vmax) scale(1.08); }
+  100% { transform: translate(-5vmax, 5vmax) scale(0.94); }
+}
+
+/* Fine film grain so the gradients don't band. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.top, .bottom {
+  padding: 28px clamp(20px, 5vw, 56px);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-size: 19px;
+  letter-spacing: 0.01em;
+}
+
+.wordmark em {
+  font-style: italic;
+  color: var(--accent);
+  padding: 0 0.08em;
+}
+
+main {
+  display: grid;
+  place-items: center;
+  padding: 24px clamp(16px, 5vw, 56px) 48px;
+}
+
+.panel {
+  width: 100%;
+  max-width: 760px;
+  padding: clamp(36px, 7vw, 72px);
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 32px;
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(48px, 10vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+h1 em {
+  font-style: italic;
+  background: linear-gradient(100deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.06em;
+}
+
+.lede {
+  margin: 26px 0 0;
+  max-width: 30em;
+  font-size: clamp(18px, 2.4vw, 21px);
+  color: var(--muted);
+}
+
+.actions { margin-top: 36px; }
+
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 16px/1 var(--sans);
+  padding: 16px 26px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--button-ink);
+  background: linear-gradient(100deg, var(--accent), var(--accent-2));
+  box-shadow: 0 12px 30px -12px var(--accent);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover { transform: translateY(-1px); box-shadow: 0 16px 36px -12px var(--accent); }
+button:active { transform: translateY(0); }
+button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.reveal {
+  margin-top: 36px;
+  padding-top: 26px;
+  border-top: 1px solid var(--glass-edge);
+  animation: rise 0.5s ease both;
+}
+
+.reveal small {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.address {
+  font-family: var(--serif);
+  font-size: clamp(22px, 4vw, 32px);
+  color: var(--ink);
+  text-decoration: none;
+  word-break: break-all;
+  border-bottom: 1px solid var(--accent);
+}
+
+.address:hover { color: var(--accent); }
+
+.note {
+  margin: 22px 0 0;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.bottom {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .aura span, .panel, .reveal { animation: none; }
+  button { transition: none; }
+}
+
+@media (max-width: 480px) {
+  .panel { border-radius: 26px; }
+  .top, .bottom { padding: 22px 20px; }
+}
